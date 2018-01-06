@@ -1,9 +1,12 @@
 buildscript {
+    ext.kotlinVersion = "1.2.10"
     repositories {
+        mavenCentral()
         jcenter()
         maven { url 'http://kamatama41.github.com/maven-repository/repository' }
     }
     dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
         classpath "com.github.kamatama41:gradle-embulk-plugin:0.1.4"
     }
 }
