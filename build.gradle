@@ -1,16 +1,17 @@
 buildscript {
-    ext.kotlinVersion = "1.2.10"
+    ext.kotlin_version = '1.2.10'
     repositories {
         mavenCentral()
         jcenter()
         maven { url 'http://kamatama41.github.com/maven-repository/repository' }
     }
     dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "com.github.kamatama41:gradle-embulk-plugin:0.1.4"
     }
 }
 
+apply plugin: "kotlin"
 apply plugin: "com.github.kamatama41.embulk"
 
 embulk {
@@ -20,4 +21,24 @@ embulk {
     authors = ["Sawada Tadashi"]
     email = "cesare@mayverse.jp"
     homepage = "https://github.com/cesare/embulk-filter-gsub"
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+}
+
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = "1.6"  // only 1.6 and 1.8 are supported, we can't choose 1.7
+    }
+}
+
+compileTestKotlin {
+    kotlinOptions {
+        jvmTarget = "1.6"  // only 1.6 and 1.8 are supported, we can't choose 1.7
+    }
 }
