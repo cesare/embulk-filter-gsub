@@ -1,0 +1,20 @@
+buildscript {
+    repositories {
+        jcenter()
+        maven { url 'http://kamatama41.github.com/maven-repository/repository' }
+    }
+    dependencies {
+        classpath "com.github.kamatama41:gradle-embulk-plugin:0.1.4"
+    }
+}
+
+apply plugin: "com.github.kamatama41.embulk"
+
+embulk {
+    version = "0.8.38"
+    category = "filter"
+    name = "gsub"
+    authors = ["Sawada Tadashi"]
+    email = "cesare@mayverse.jp"
+    homepage = "https://github.com/cesare/embulk-filter-gsub"
+}
