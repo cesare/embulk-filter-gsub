@@ -21,4 +21,17 @@ class CombinedReplacerTest {
         val result = combinedReplacer.execute("FOO BAR BAZ")
         Assert.assertEquals("foo bar baz", result)
     }
+
+    @Test
+    fun testExecuteWithMultipleReplacer() {
+        val lowerCaseReplacer = LowerCaseReplacer()
+        val regexReplacer = RegexReplacer("\\s+".toRegex(), "-")
+        val replacers = ArrayList<TextReplacer>()
+        replacers.add(lowerCaseReplacer)
+        replacers.add(regexReplacer)
+
+        val combinedReplacer = CombinedReplacer(replacers)
+        val result = combinedReplacer.execute("FOO BAR BAZ")
+        Assert.assertEquals("foo-bar-baz", result)
+    }
 }
