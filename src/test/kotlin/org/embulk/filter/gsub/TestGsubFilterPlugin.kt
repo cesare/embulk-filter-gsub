@@ -19,43 +19,39 @@ class TestGsubFilterPlugin {
         val configYaml = """
         |type: gsub
         |target_columns:
-        |  - name: foo
-        |    rules:
-        |      - type: to_lower_case
-        |        pattern: "[A-Z]*"
-        |  - name: bar
-        |    rules:
-        |      - type: "regexp_replace"
-        |        pattern: "<br\\s*/?>"
-        |        to: "\\n"
-        |      - pattern: "(\\d+):(.*)"
-        |        to: "\\1 [\\2]"
+        |  foo:
+        |    - type: to_lower_case
+        |      pattern: "[A-Z]*"
+        |  bar:
+        |    - type: "regexp_replace"
+        |      pattern: "<br\\s*/?>"
+        |      to: "\\n"
+        |    - pattern: "(\\d+):(.*)"
+        |      to: "\\1 [\\2]"
         """.trimMargin()
 
         val config = getConfigFromYaml(configYaml)
         val task = config.loadConfig(GsubFilterPlugin.PluginTask::class.java)
 
-        val fooColumn = task.targetColumns[0]
-        Assert.assertEquals("foo", fooColumn.name)
-
-        val fooRules = fooColumn.rules
+        val fooRules = task.targetColumns["foo"]
         Assert.assertThat(fooRules, hasSize(1))
 
-        val fooRule = fooRules[0]
+        val fooRule = fooRules!![0]
         Assert.assertEquals("to_lower_case", fooRule.type)
         Assert.assertEquals("[A-Z]*", fooRule.pattern.get())
 
-        val barColumn = task.targetColumns[1]
-        Assert.assertEquals("bar", barColumn.name)
-
-        val barRules = barColumn.rules
+        val barRules = task.targetColumns["bar"]
         Assert.assertThat(barRules, hasSize(2))
 
-        val barRule1 = barRules[0]
+        val barRule1 = barRules!![0]
         Assert.assertEquals("regexp_replace", barRule1.type)
         Assert.assertEquals("<br\\s*/?>", barRule1.pattern.get())
         Assert.assertEquals("\\n", barRule1.to.get())
 
+        val barRule2 = barRules!![1]
+        Assert.assertEquals("regexp_replace", barRule2.type)
+        Assert.assertEquals("(\\d+):(.*)", barRule2.pattern.get())
+        Assert.assertEquals("\\1 [\\2]", barRule2.to.get())
     }
 
     fun getConfigFromYaml(yaml: String): ConfigSource {

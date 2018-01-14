@@ -12,8 +12,8 @@ import org.embulk.spi.Schema
 class GsubFilterPlugin : FilterPlugin {
     interface PluginTask : Task {
         @get:Config("target_columns")
-        @get:ConfigDefault("[]")
-        val targetColumns: List<TargetColumnConfig>
+        @get:ConfigDefault("{}")
+        val targetColumns: Map<String, List<SubstitutionRule>>
     }
 
     override fun transaction(config: ConfigSource, inputSchema: Schema,
