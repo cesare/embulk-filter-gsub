@@ -17,9 +17,9 @@ class ColumnReplacerFactory {
 
     private fun createReplacer(rule: SubstitutionRule): TextReplacer {
         val type = findSubstitutionType(rule.type)
-        when (type) {
-            SubstitutionType.REGEXP_REPLACE -> return createRegexReplacer(rule)
-            SubstitutionType.TO_LOWER_CASE -> return createLowerCaseReplacer(rule)
+        return when (type) {
+            SubstitutionType.REGEXP_REPLACE -> createRegexReplacer(rule)
+            SubstitutionType.TO_LOWER_CASE -> createLowerCaseReplacer(rule)
             else -> throw RuntimeException("Substitution type ${type.label} is not supported")
         }
     }
