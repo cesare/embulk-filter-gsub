@@ -5,6 +5,7 @@ import org.embulk.config.ConfigDefault
 import org.embulk.config.ConfigSource
 import org.embulk.config.Task
 import org.embulk.config.TaskSource
+import org.embulk.filter.gsub.replacer.TextReplacer
 import org.embulk.spi.FilterPlugin
 import org.embulk.spi.PageOutput
 import org.embulk.spi.Schema
@@ -14,11 +15,17 @@ class GsubFilterPlugin : FilterPlugin {
         @get:Config("target_columns")
         @get:ConfigDefault("{}")
         val targetColumns: Map<String, List<SubstitutionRule>>
+
+        var columnReplacers: Map<String, TextReplacer>?
+        fun initializeReplacers() {
+            this.columnReplacers = ColumnReplacerFactory().create(this)
+        }
     }
 
     override fun transaction(config: ConfigSource, inputSchema: Schema,
                              control: FilterPlugin.Control) {
         val task = config.loadConfig<PluginTask>(PluginTask::class.java)
+        task.initializeReplacers()
 
         control.run(task.dump(), inputSchema)
     }
