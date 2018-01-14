@@ -26,7 +26,7 @@ class ColumnReplacerFactory {
 
     private fun findSubstitutionType(typeName: String): SubstitutionType {
         try {
-            return SubstitutionType.valueOf(typeName)
+            return SubstitutionType.valueOf(typeName.toUpperCase())
         }
         catch (e: IllegalArgumentException) {
             throw RuntimeException("Unknown substitution type: ${typeName}", e)
