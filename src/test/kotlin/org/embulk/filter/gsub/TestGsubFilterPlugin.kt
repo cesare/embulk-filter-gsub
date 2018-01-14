@@ -38,17 +38,17 @@ class TestGsubFilterPlugin {
         val fooColumn = task.targetColumns[0]
         Assert.assertEquals("foo", fooColumn.name)
 
-        val fooRules = fooColumn!!.rules
+        val fooRules = fooColumn.rules
         Assert.assertThat(fooRules, hasSize(1))
 
         val fooRule = fooRules[0]
-        Assert.assertEquals("to_lower_case", fooRule?.type)
-        Assert.assertEquals("[A-Z]*", fooRule?.pattern.get())
+        Assert.assertEquals("to_lower_case", fooRule.type)
+        Assert.assertEquals("[A-Z]*", fooRule.pattern.get())
 
         val barColumn = task.targetColumns[1]
         Assert.assertEquals("bar", barColumn.name)
 
-        val barRules = barColumn!!.rules
+        val barRules = barColumn.rules
         Assert.assertThat(barRules, hasSize(2))
 
         val barRule1 = barRules[0]
