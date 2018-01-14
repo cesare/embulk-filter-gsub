@@ -6,10 +6,12 @@ import org.embulk.spi.*
 
 class ColumnVisitorImpl
     constructor(
+        task: PluginTask,
         private val pageReader: PageReader,
-        private val pageBuilder: PageBuilder,
-        private val columnReplacers: Map<String, TextReplacer>
+        private val pageBuilder: PageBuilder
     ) : ColumnVisitor {
+
+    private val columnReplacers: Map<String, TextReplacer> = ColumnReplacerFactory().create(task)
 
     override fun booleanColumn(column: Column) {
         if (pageReader.isNull(column)) {

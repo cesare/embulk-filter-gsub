@@ -28,8 +28,7 @@ class GsubFilterPlugin : FilterPlugin {
         return object: PageOutput {
             val pageReader = PageReader(inputSchema)
             val pageBuilder = PageBuilder(Exec.getBufferAllocator(), outputSchema, output)
-            val columnReplacers = ColumnReplacerFactory().create(task)
-            val columnVisitor = ColumnVisitorImpl(pageReader, pageBuilder, columnReplacers)
+            val columnVisitor = ColumnVisitorImpl(task, pageReader, pageBuilder)
 
             override fun add(page: Page) {
                 pageReader.setPage(page)
