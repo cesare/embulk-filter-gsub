@@ -10,7 +10,6 @@ interface SubstitutionRule : Task {
         REGEXP_REPLACE("regexp_replace"),
         TO_UPPER_CASE("to_upper_case"),
         TO_LOWER_CASE("to_lower_case"),
-        DELETE("delete"),
     }
 
     @get:Config("type")
