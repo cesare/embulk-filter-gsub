@@ -19,6 +19,7 @@ class ColumnReplacerFactory {
         val type = findSubstitutionType(rule.type)
         return when (type) {
             SubstitutionType.REGEXP_REPLACE -> createRegexReplacer(rule)
+            SubstitutionType.TO_UPPER_CASE -> createUpperCaseReplacer(rule)
             SubstitutionType.TO_LOWER_CASE -> createLowerCaseReplacer(rule)
             else -> throw RuntimeException("Substitution type ${type.label} is not supported")
         }
@@ -57,6 +58,21 @@ class ColumnReplacerFactory {
         }
         else {
             return LowerCaseReplacer()
+        }
+    }
+
+    private fun createUpperCaseReplacer(rule: SubstitutionRule): TextReplacer {
+        val pattern = rule.pattern.orNull()
+        if (pattern != null) {
+            // TODO set regex options
+            val regexOptionConfig = RegexOptionConfig()
+            val factory = RegexFactory()
+            val regex = factory.create(pattern, regexOptionConfig)
+
+            return UpperCaseReplacer(regex)
+        }
+        else {
+            return UpperCaseReplacer()
         }
     }
 }
