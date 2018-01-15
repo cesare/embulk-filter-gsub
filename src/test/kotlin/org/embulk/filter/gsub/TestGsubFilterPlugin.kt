@@ -54,7 +54,7 @@ class TestGsubFilterPlugin {
         Assert.assertEquals("\\1 [\\2]", barRule2.to.get())
     }
 
-    fun getConfigFromYaml(yaml: String): ConfigSource {
+    private fun getConfigFromYaml(yaml: String): ConfigSource {
         val loader = ConfigLoader(Exec.getModelManager())
         return loader.fromYamlString(yaml)
     }
