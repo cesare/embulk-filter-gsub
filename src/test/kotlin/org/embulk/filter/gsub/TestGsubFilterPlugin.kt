@@ -48,7 +48,7 @@ class TestGsubFilterPlugin {
         Assert.assertEquals("<br\\s*/?>", barRule1.pattern.get())
         Assert.assertEquals("\\n", barRule1.to.get())
 
-        val barRule2 = barRules!![1]
+        val barRule2 = barRules[1]
         Assert.assertEquals("regexp_replace", barRule2.type)
         Assert.assertEquals("(\\d+):(.*)", barRule2.pattern.get())
         Assert.assertEquals("\\1 [\\2]", barRule2.to.get())
