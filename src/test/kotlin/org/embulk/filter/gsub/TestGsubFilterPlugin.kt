@@ -3,7 +3,10 @@ package org.embulk.filter.gsub
 import org.embulk.EmbulkTestRuntime
 import org.embulk.config.ConfigLoader
 import org.embulk.config.ConfigSource
-import org.embulk.spi.Exec
+import org.embulk.config.TaskSource
+import org.embulk.spi.*
+import org.embulk.spi.type.Types
+import org.embulk.spi.util.Pages
 import org.junit.Assert
 import org.junit.Rule
 import org.junit.Test
@@ -52,6 +55,163 @@ class TestGsubFilterPlugin {
         Assert.assertEquals("regexp_replace", barRule2.type)
         Assert.assertEquals("(\\d+):(.*)", barRule2.pattern.get())
         Assert.assertEquals("\\1 [\\2]", barRule2.to.get())
+    }
+
+    @Test
+    fun testEmptyFilter() {
+        val configYaml = """
+        |type: gsub
+        """.trimMargin()
+
+        val config = getConfigFromYaml(configYaml)
+
+        val inputSchema = Schema.builder()
+                .add("bool", Types.BOOLEAN)
+                .add("long", Types.LONG)
+                .add("string", Types.STRING)
+                .build()
+
+        val plugin = GsubFilterPlugin()
+        plugin.transaction(config, inputSchema, object: FilterPlugin.Control {
+            override fun run(taskSource: TaskSource, outputSchema: Schema) {
+                val mockPageOutput = TestPageBuilderReader.MockPageOutput()
+                val pageOutput = plugin.open(taskSource, inputSchema, outputSchema, mockPageOutput)
+
+                val inputPage = PageTestUtils.buildPage(runtime.bufferAllocator, inputSchema, true, 1234L, "test for echo")
+                for (page in inputPage) {
+                    pageOutput.add(page)
+                }
+                pageOutput.finish()
+                pageOutput.close()
+
+                val records = Pages.toObjects(outputSchema, mockPageOutput.pages)
+                val record = records.get(0)
+                Assert.assertEquals(true, record[0])
+                Assert.assertEquals(1234L, record[1])
+                Assert.assertEquals("test for echo", record[2])
+            }
+        })
+    }
+
+    @Test
+    fun testRegexReplaceFilter() {
+        val configYaml = """
+        |type: gsub
+        |target_columns:
+        |  string:
+        |    - type: regexp_replace
+        |      pattern: "test"
+        |      to: "[replaced]"
+        """.trimMargin()
+
+        val config = getConfigFromYaml(configYaml)
+
+        val inputSchema = Schema.builder()
+                .add("bool", Types.BOOLEAN)
+                .add("long", Types.LONG)
+                .add("string", Types.STRING)
+                .build()
+
+        val plugin = GsubFilterPlugin()
+        plugin.transaction(config, inputSchema, object: FilterPlugin.Control {
+            override fun run(taskSource: TaskSource, outputSchema: Schema) {
+                val mockPageOutput = TestPageBuilderReader.MockPageOutput()
+                val pageOutput = plugin.open(taskSource, inputSchema, outputSchema, mockPageOutput)
+
+                val inputPage = PageTestUtils.buildPage(runtime.bufferAllocator, inputSchema, true, 1234L, "test for echo")
+                for (page in inputPage) {
+                    pageOutput.add(page)
+                }
+                pageOutput.finish()
+                pageOutput.close()
+
+                val records = Pages.toObjects(outputSchema, mockPageOutput.pages)
+                val record = records.get(0)
+                Assert.assertEquals(true, record[0])
+                Assert.assertEquals(1234L, record[1])
+                Assert.assertEquals("[replaced] for echo", record[2])
+            }
+        })
+    }
+
+    @Test
+    fun testToUpperCaseFilter() {
+        val configYaml = """
+        |type: gsub
+        |target_columns:
+        |  string:
+        |    - type: to_upper_case
+        |      pattern: "test"
+        """.trimMargin()
+
+        val config = getConfigFromYaml(configYaml)
+
+        val inputSchema = Schema.builder()
+                .add("bool", Types.BOOLEAN)
+                .add("long", Types.LONG)
+                .add("string", Types.STRING)
+                .build()
+
+        val plugin = GsubFilterPlugin()
+        plugin.transaction(config, inputSchema, object: FilterPlugin.Control {
+            override fun run(taskSource: TaskSource, outputSchema: Schema) {
+                val mockPageOutput = TestPageBuilderReader.MockPageOutput()
+                val pageOutput = plugin.open(taskSource, inputSchema, outputSchema, mockPageOutput)
+
+                val inputPage = PageTestUtils.buildPage(runtime.bufferAllocator, inputSchema, true, 1234L, "test for echo")
+                for (page in inputPage) {
+                    pageOutput.add(page)
+                }
+                pageOutput.finish()
+                pageOutput.close()
+
+                val records = Pages.toObjects(outputSchema, mockPageOutput.pages)
+                val record = records.get(0)
+                Assert.assertEquals(true, record[0])
+                Assert.assertEquals(1234L, record[1])
+                Assert.assertEquals("TEST for echo", record[2])
+            }
+        })
+    }
+
+    @Test
+    fun testToLowerCaseFilter() {
+        val configYaml = """
+        |type: gsub
+        |target_columns:
+        |  string:
+        |    - type: to_lower_case
+        |      pattern: "TEST"
+        """.trimMargin()
+
+        val config = getConfigFromYaml(configYaml)
+
+        val inputSchema = Schema.builder()
+                .add("bool", Types.BOOLEAN)
+                .add("long", Types.LONG)
+                .add("string", Types.STRING)
+                .build()
+
+        val plugin = GsubFilterPlugin()
+        plugin.transaction(config, inputSchema, object: FilterPlugin.Control {
+            override fun run(taskSource: TaskSource, outputSchema: Schema) {
+                val mockPageOutput = TestPageBuilderReader.MockPageOutput()
+                val pageOutput = plugin.open(taskSource, inputSchema, outputSchema, mockPageOutput)
+
+                val inputPage = PageTestUtils.buildPage(runtime.bufferAllocator, inputSchema, true, 1234L, "TEST FOR ECHO")
+                for (page in inputPage) {
+                    pageOutput.add(page)
+                }
+                pageOutput.finish()
+                pageOutput.close()
+
+                val records = Pages.toObjects(outputSchema, mockPageOutput.pages)
+                val record = records.get(0)
+                Assert.assertEquals(true, record[0])
+                Assert.assertEquals(1234L, record[1])
+                Assert.assertEquals("test FOR ECHO", record[2])
+            }
+        })
     }
 
     private fun getConfigFromYaml(yaml: String): ConfigSource {
