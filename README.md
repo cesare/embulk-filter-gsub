@@ -12,12 +12,18 @@ Embulk filter plugin to convert text column values with regular expressions.
 
 ### target column configuration
 
-- **type**: type of text substitution (string, one of `regexp_replace`, `to_lower_case`, `to_upper_case`, default: `regexp_replace`)
+- **type**: type of text substitution (string, default: `regexp_replace`)
+
+Supported Types are:
+
+* regexp_replace
+* to_lower_case
+* to_upper_case
 
 #### regexp_replace
 
-- **pattern**: regular expression pattern to be substituted
-- **to**: replacement string
+- **pattern**: regular expression pattern to be substituted (string, required)
+- **to**: replacement string (string, required)
 
 ##### Example
 
@@ -29,9 +35,23 @@ target_columns:
       to: "$1 = [$2]"
 ```
 
+it converts input like this
+
+foo | bar
+-----|-----
+example-foo: 1234 | example-bar: 9876
+
+into the output
+
+foo | bar
+-----|-----
+example-foo = [1234] | example-bar: 9876
+
 #### to_lower_case
 
-- **pattern**: regular expression pattern to be substituted. optional; if omitted, whole text is converted into lower case letters
+- **pattern**: regular expression pattern to be substituted (string, optional)
+
+If `pattern` is omitted, whole text is converted into lower case letters.
 
 ##### Example
 
@@ -41,9 +61,23 @@ target_columns:
     - type: to_lower_case
 ```
 
+it converts input like this
+
+foo | bar
+-----|-----
+ABC | XYZ
+
+into the output
+
+foo | bar
+-----|-----
+abc | XYZ
+
 #### to_upper_case
 
-- **pattern**: regular expression pattern to be substituted. optional; if omitted, whole text is converted into upper case letters
+- **pattern**: regular expression pattern to be substituted (string, optional)
+
+If `pattern` is omitted, whole text is converted into upper case letters.
 
 ##### Example
 
@@ -52,6 +86,18 @@ target_columns:
   foo:
     - type: to_upper_case
 ```
+
+it converts input like this
+
+foo | bar
+-----|-----
+abc | xyz
+
+into the output
+
+foo | bar
+-----|-----
+ABC | xyz
 
 ### Multiple conversion
 
