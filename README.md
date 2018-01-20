@@ -1,5 +1,7 @@
 # Gsub filter plugin for Embulk
 
+[![CircleCI](https://circleci.com/gh/cesare/embulk-filter-gsub.svg?style=svg)](https://circleci.com/gh/cesare/embulk-filter-gsub)
+
 Embulk filter plugin to convert text column values with regular expressions.
 
 ## Overview
