@@ -12,6 +12,23 @@ Embulk filter plugin to convert text column values with regular expressions.
 
 - **target_columns**: columns to convert text value (array, default: `[]`)
 
+### Example
+
+```yaml
+filters:
+  - type: gsub
+    target_columns:
+      foo:
+        - type: regexp_replace
+          pattern: "(\\w*):\\s*(\\w*)"
+          to: "$1 = [$2]"
+      bar:
+        - type: to_lower_case
+      baz:
+        - type: to_upper_case
+          pattern: "test"
+```
+
 ### target column configuration
 
 - **type**: type of text substitution (string, default: `regexp_replace`)
@@ -114,23 +131,6 @@ target_columns:
     - type: regexp_replace
       pattern: "(\\w*):\\s*(\\w*)"
       to: "$1 = [$2]"
-```
-
-## Example
-
-```yaml
-filters:
-  - type: gsub
-    target_columns:
-      foo:
-        - type: regexp_replace
-          pattern: "(\\w*):\\s*(\\w*)"
-          to: "$1 = [$2]"
-      bar:
-        - type: to_lower_case
-      baz:
-        - type: to_upper_case
-          pattern: "test"
 ```
 
 
