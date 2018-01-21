@@ -20,7 +20,7 @@ filters:
     target_columns:
       foo:
         - type: regexp_replace
-          pattern: "(\\w*):\\s*(\\w*)"
+          pattern: '(\w*):\s*(\w*)'
           to: "$1 = [$2]"
       bar:
         - type: to_lower_case
@@ -50,7 +50,7 @@ Supported Types are:
 target_columns:
   foo:
     - type: regexp_replace
-      pattern: "(\\w*):\\s*(\\w*)"
+      pattern: '(\w*):\s*(\w*)'
       to: "$1 = [$2]"
 ```
 
@@ -126,10 +126,10 @@ You can apply multiple conversion on a column value.
 target_columns:
   foo:
     - type: regexp_replace
-      pattern: "</?\\w*\\s*/?>"
+      pattern: '</?\w*\s*/?>'
       to: ""
     - type: regexp_replace
-      pattern: "(\\w*):\\s*(\\w*)"
+      pattern: '(\w*):\s*(\w*)'
       to: "$1 = [$2]"
 ```
 
