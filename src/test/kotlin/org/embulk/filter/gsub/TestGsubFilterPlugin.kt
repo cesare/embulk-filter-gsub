@@ -58,6 +58,54 @@ class TestGsubFilterPlugin {
     }
 
     @Test
+    fun testDefaultRegexOptions() {
+        val configYaml = """
+        |type: gsub
+        |target_columns:
+        |  foo:
+        |    - type: regexp_replace
+        |      pattern: "test"
+        """.trimMargin()
+
+        val config = getConfigFromYaml(configYaml)
+        val task = config.loadConfig(GsubFilterPlugin.PluginTask::class.java)
+        val fooRules = task.targetColumns["foo"]!!
+        val fooRule = fooRules[0]
+        val regexOptions = fooRule.regexOptions
+        Assert.assertFalse(regexOptions.ignoreCase)
+        Assert.assertTrue(regexOptions.multiline)
+        Assert.assertFalse(regexOptions.dotMatchesAll)
+        Assert.assertFalse(regexOptions.enableComments)
+    }
+
+    @Test
+    fun testRegexOptions() {
+        val configYaml = """
+        |type: gsub
+        |target_columns:
+        |  foo:
+        |    - type: regexp_replace
+        |      pattern: "test"
+        |      regexp_options:
+        |        ignore_case: true
+        |        multiline: true
+        |        dot_matches_all: true
+        |        enable_comments: true
+        """.trimMargin()
+
+        val config = getConfigFromYaml(configYaml)
+        val task = config.loadConfig(GsubFilterPlugin.PluginTask::class.java)
+        val fooRules = task.targetColumns["foo"]!!
+        val fooRule = fooRules[0]
+        val regexOptions = fooRule.regexOptions
+
+        Assert.assertTrue(regexOptions.ignoreCase)
+        Assert.assertTrue(regexOptions.multiline)
+        Assert.assertTrue(regexOptions.dotMatchesAll)
+        Assert.assertTrue(regexOptions.enableComments)
+    }
+
+    @Test
     fun testEmptyFilter() {
         val configYaml = """
         |type: gsub

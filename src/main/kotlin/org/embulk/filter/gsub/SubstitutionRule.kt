@@ -23,4 +23,8 @@ interface SubstitutionRule : Task {
     @get:Config("to")
     @get:ConfigDefault("null")
     val to: Optional<String>
+
+    @get:Config("regexp_options")
+    @get:ConfigDefault("{}")
+    val regexOptions: RegexOptions
 }
