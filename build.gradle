@@ -18,6 +18,7 @@ embulk {
     version = "0.8.38"
     category = "filter"
     name = "gsub"
+    description = "Embulk filter plugin to convert text column values with regular expressions"
     authors = ["Sawada Tadashi"]
     email = "cesare@mayverse.jp"
     homepage = "https://github.com/cesare/embulk-filter-gsub"
