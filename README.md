@@ -133,6 +133,26 @@ target_columns:
       to: "$1 = [$2]"
 ```
 
+### Regular expression options
+
+You can specify some regular expression options.
+
+```yaml
+target_columns:
+  foo:
+    - type: regexp_replace
+      pattern: 'foo'
+      to: "***"
+      regexp_options:
+        ignore_case: true
+```
+
+Supported options are:
+
+* **ignore_case** (boolean, default: false)
+* **multiline** (boolean, default: true)
+* **dot_matches_all** (boolean, default: false)
+* **enable_comments** (boolean, default: false)
 
 ## Build
 
